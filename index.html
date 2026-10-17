@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A little question</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Matemasie&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            display: grid;
+            min-height: 100svh;
+            place-items: center;
+            margin: 0;
+            padding: 24px 16px;
+            overflow-x: hidden;
+            color: #59434a;
+            font-family: "Trebuchet MS", Arial, sans-serif;
+            line-height: 1.5;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(255, 185, 203, .6), transparent 26rem),
+                radial-gradient(circle at 90% 90%, rgba(255, 218, 175, .7), transparent 25rem),
+                #fff8f4;
+        }
+        main {
+            position: relative;
+            width: min(100%, 650px);
+            padding: clamp(22px, 6vw, 48px);
+            border: 1px solid rgba(198, 98, 125, .13);
+            border-radius: 28px;
+            background: rgba(255, 255, 255, .85);
+            box-shadow: 0 25px 80px rgba(132, 63, 82, .12);
+            text-align: center;
+            animation: page-enter .7s both;
+        }
+        .eyebrow {
+            margin: 0 0 14px;
+            color: #b45b73;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .17em;
+            text-transform: uppercase;
+        }
+        h1 {
+            margin: 0 auto 24px;
+            color: #ac5270;
+            font: 400 clamp(1.75rem, 6.5vw, 3.3rem)/1.2 "Matemasie", "Trebuchet MS", sans-serif;
+            text-wrap: balance;
+        }
+        img {
+            display: block;
+            width: min(100%, 310px);
+            height: auto;
+            aspect-ratio: 1.12;
+            margin: 0 auto;
+            border: 7px solid #fff;
+            border-radius: 22px;
+            box-shadow: 0 16px 36px rgba(94, 52, 63, .16);
+            object-fit: cover;
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            50% { transform: translateY(-7px) rotate(1deg); }
+        }
+        .actions {
+            display: flex;
+            min-height: 48px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+        button {
+            min-height: 48px;
+            padding: 0 20px;
+            border: 0;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color .2s ease, transform .2s ease;
+        }
+        button:focus-visible {
+            outline: 3px solid #ac5270;
+            outline-offset: 3px;
+        }
+        button:hover { transform: translateY(-1px); }
+        .actions button {
+            min-width: 128px;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+        #Yes {
+            background: #bd5f78;
+            color: #fff;
+            box-shadow: 0 8px 18px rgba(189, 95, 120, .2);
+        }
+        #Yes:hover { background: #a94964; }
+        #No {
+            z-index: 1;
+            border: 1px solid #e3cbd1;
+            background: #fff;
+            color: #835d67;
+        }
+        #No:hover { background: #fff0f3; }
+        #response { min-height: 24px; margin: 17px 0 0; color: #875b67; font-size: .9rem; }
+        #confetti-container { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
+        .confetti {
+            position: absolute;
+            top: -14px;
+            width: 9px;
+            height: 13px;
+            border-radius: 3px;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            img { animation: none; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <p class="eyebrow">One important question</p>
+        <h1>Will you be my valentine?</h1>
+        <img src="giphy.gif" alt="A gorilla holding a heart">
+        <div class="actions">
+            <button id="Yes" type="button">Yes, absolutely</button>
+            <button id="No" type="button">Not this time</button>
+        </div>
+        <p id="response" aria-live="polite"></p>
+        <div id="confetti-container" aria-hidden="true"></div>
+    </main>
+    <script>
+        const confettiContainer = document.getElementById("confetti-container");
+        const response = document.getElementById("response");
+        const main = document.querySelector("main");
+        const noButton = document.getElementById("No");
+
+        noButton.addEventListener("mouseenter", () => {
+            noButton.style.position = "absolute";
+            const maxLeft = main.clientWidth - noButton.offsetWidth;
+            const maxTop = main.clientHeight - noButton.offsetHeight;
+            noButton.style.left = `${Math.random() * maxLeft}px`;
+            noButton.style.top = `${Math.random() * maxTop}px`;
+        });
+
+        document.getElementById("Yes").addEventListener("click", () => {
+            response.textContent = "Best answer. Happy Valentine's Day! 💗";
+            for (let index = 0; index < 50; index += 1) {
+                const confetti = document.createElement("span");
+                confetti.className = "confetti";
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360} 78% 65%)`;
+                confetti.style.animationDuration = `${2 + Math.random() * 2.5}s`;
+                confettiContainer.appendChild(confetti);
+                window.setTimeout(() => confetti.remove(), 4600);
+            }
+        });
+        noButton.addEventListener("click", () => {
+            response.textContent = "No pressure. Hope you have a lovely day either way.";
+        });
+    </script>
+</body>
+</html>
